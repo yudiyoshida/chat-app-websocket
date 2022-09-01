@@ -9,12 +9,19 @@ const io = socketio(server);
 
 app.use(express.static(path.resolve(__dirname, '..', 'public')));
 
+
 io.on('connection', (socket) => {
   socket.broadcast.emit('message', 'socket.io', `${socket.id} joined the room!`, '');
   socket.emit('message', 'socket.io', 'Welcome!');
 
   socket.on('message', (who, message, callback) => {
     io.emit('message', who, message);
+    callback();
+    
+  });
+
+  socket.on('location', (who, location, callback) => {
+    io.emit('location', who, location);
     callback();
     
   });
