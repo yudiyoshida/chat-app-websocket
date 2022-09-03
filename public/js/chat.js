@@ -8,17 +8,13 @@ const $messages = window.document.querySelector('div#messages');
 const messageTemplate = window.document.querySelector('#message-template').innerHTML;
 const locationTemplate = window.document.querySelector('#location-template').innerHTML;
 
-socket.on('message', (who, message) => {
-  // console.log(`Sent by: ${who} | ${message}`);
-
-  const html = Mustache.render(messageTemplate, { message });
+socket.on('message', (object) => {
+  const html = Mustache.render(messageTemplate, { object });
   $messages.insertAdjacentHTML('beforeend', html);
 });
 
-socket.on('location', (who, location) => {
-  // console.log(`Sent by: ${who} | ${message}`);
-
-  const html = Mustache.render(locationTemplate, { location });
+socket.on('location', (object) => {
+  const html = Mustache.render(locationTemplate, { object });
   $messages.insertAdjacentHTML('beforeend', html);
 });
 
@@ -32,7 +28,6 @@ $btnMessage.addEventListener('click', (e) => {
       input.focus();
     });
   }
-
 });
 
 $btnLocation.addEventListener('click', (e) => {
@@ -50,14 +45,13 @@ $btnLocation.addEventListener('click', (e) => {
       longitude: position.coords.longitude,
       // timestamp: position.timestamp,
     };
+
     const maps = `${BASE_URL}${infos.latitude},${infos.longitude}`;
-    
     socket.emit('location', socket.id, maps, () => {
       enable($btnMessage);
       enable($btnLocation);
     });
   });
-
 });
 
 function disable(target) {

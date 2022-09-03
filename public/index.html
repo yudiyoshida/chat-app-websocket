@@ -18,14 +18,18 @@
   <button id="location">Send location</button>
 
   <script id="message-template" type="text/html">
-    <div>
-      <p>{{ message }}</p>
+    <div style="border: 1px solid red">
+      <p>{{ object.who }}</p>
+      <p>{{ object.message }}</p>
+      <p>{{ object.createdAt }}</p>
     </div>
   </script>
 
   <script id="location-template" type="text/html">
-    <div>
-      <p><a href="{{ location }}" target="_blank">My current location</a></p>
+    <div style="border: 1px solid blue">
+      <p>{{ object.who }}</p>
+      <p><a href="{{ object.message }}" target="_blank">My current location</a></p>
+      <p>{{ object.createdAt }}</p>
     </div>
   </script>
   
