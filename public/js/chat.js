@@ -8,6 +8,8 @@ const $messages = window.document.querySelector('div#messages');
 const messageTemplate = window.document.querySelector('#message-template').innerHTML;
 const locationTemplate = window.document.querySelector('#location-template').innerHTML;
 
+const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true });
+
 socket.on('message', (object) => {
   const html = Mustache.render(messageTemplate, { object });
   $messages.insertAdjacentHTML('beforeend', html);
@@ -23,9 +25,15 @@ $btnMessage.addEventListener('click', (e) => {
 
   const input = $form.querySelector('input#msg');
   if (input.value) {
-    socket.emit('message', socket.id, input.value, () => {
-      input.value = '';
-      input.focus();
+    console.log(username, room);
+    socket.emit('message', {
+      username,
+      room,
+      message: input.value, 
+      callback: () => {
+        input.value = '';
+        input.focus();
+      }
     });
   }
 });
@@ -53,6 +61,8 @@ $btnLocation.addEventListener('click', (e) => {
     });
   });
 });
+
+socket.emit('join', { username, room });
 
 function disable(target) {
   target.setAttribute('disabled', 'disabled');
