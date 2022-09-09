@@ -28,7 +28,7 @@
   <script id="message-template" type="text/html">
     <div class="message">
       <p>
-        <span class="message__name">{{ object.who }}</span>
+        <span class="message__name">{{ object.username }}</span>
         <span class="message__meta">{{ object.createdAt }}</span>
       </p>
       <p>{{ object.message }}</p>
@@ -38,7 +38,7 @@
   <script id="location-template" type="text/html">
     <div class="message">
       <p>
-        <span class="message__name">{{ object.who }}</span>
+        <span class="message__name">{{ object.username }}</span>
         <span class="message__meta">{{ object.createdAt }}</span>
       </p>
       <p><a href="{{ object.message }}" target="_blank">My current location</a></p>

@@ -25,15 +25,13 @@ $btnMessage.addEventListener('click', (e) => {
 
   const input = $form.querySelector('input#msg');
   if (input.value) {
-    console.log(username, room);
     socket.emit('message', {
       username,
       room,
-      message: input.value, 
-      callback: () => {
-        input.value = '';
-        input.focus();
-      }
+      message: input.value,
+    }, () => {
+      input.value = '';
+      input.focus();
     });
   }
 });
@@ -55,14 +53,23 @@ $btnLocation.addEventListener('click', (e) => {
     };
 
     const maps = `${BASE_URL}${infos.latitude},${infos.longitude}`;
-    socket.emit('location', socket.id, maps, () => {
+    socket.emit('location', {
+      username,
+      room,
+      message: maps,
+    }, () => {
       enable($btnMessage);
       enable($btnLocation);
     });
   });
 });
 
-socket.emit('join', { username, room });
+socket.emit('join', { username, room }, (error) => {
+  if (error) {
+    location.href = '/';
+    alert(error);
+  }
+});
 
 function disable(target) {
   target.setAttribute('disabled', 'disabled');
