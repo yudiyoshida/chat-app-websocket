@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
     if (error) {
       callback(error);
 
-    } else { 
+    } else {
       socket.join(user.room);
       socket.emit('message', generateData('socket.io', 'Welcome!'));
       socket.broadcast.to(user.room).emit('message', generateData('socket.io', `${user.username} has joined!`));
