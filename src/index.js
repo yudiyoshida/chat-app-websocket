@@ -2,7 +2,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
-const { generateData } = require('./utils/message');
+const { generateData, generateRoom } = require('./utils/message');
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users');
 
 const app = express();
@@ -29,24 +29,34 @@ io.on('connection', (socket) => {
       socket.join(user.room);
       socket.emit('message', generateData('socket.io', 'Welcome!'));
       socket.broadcast.to(user.room).emit('message', generateData('socket.io', `${user.username} has joined!`));
+      
+      io.to(user.room).emit('members', generateRoom(user.room, getUsersInRoom(user.room)));
       callback();
 
     }
   });
 
   socket.on('message', (data, callback) => {
-    io.emit('message', generateData(data.username, data.message));
+    const user = getUser(socket.id);
+
+    io.to(user.room).emit('message', generateData(data.username, data.message));
     callback();
   });
 
   socket.on('location', (data, callback) => {
-    io.emit('location', generateData(data.username, data.message));
+    const user = getUser(socket.id);
+
+    io.to(user.room).emit('location', generateData(data.username, data.message));
     callback();
   });
 
   socket.on('disconnect', () => {
     const user = removeUser(socket.id);
-    if (user) io.to(user.room).emit('message', generateData('socket.io', `${user.username} disconnected`));
+
+    if (user) {
+      io.to(user.room).emit('message', generateData('socket.io', `${user.username} disconnected`));
+      io.to(user.room).emit('members', generateRoom(user.room, getUsersInRoom(user.room)));
+    }
   });
 
 });

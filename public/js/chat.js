@@ -7,6 +7,7 @@ const $btnLocation = window.document.querySelector('button#location');
 const $messages = window.document.querySelector('div#messages');
 const messageTemplate = window.document.querySelector('#message-template').innerHTML;
 const locationTemplate = window.document.querySelector('#location-template').innerHTML;
+const sideBarTemplate = window.document.querySelector('#sidebar-template').innerHTML;
 
 const { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true });
 
@@ -18,6 +19,11 @@ socket.on('message', (object) => {
 socket.on('location', (object) => {
   const html = Mustache.render(locationTemplate, { object });
   $messages.insertAdjacentHTML('beforeend', html);
+});
+
+socket.on('members', (object) => {
+  const html = Mustache.render(sideBarTemplate, { object });
+  window.document.querySelector('#sidebar').innerHTML = html;
 });
 
 $btnMessage.addEventListener('click', (e) => {

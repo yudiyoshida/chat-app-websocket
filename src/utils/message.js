@@ -8,4 +8,11 @@ const generateData = (username, message) => {
   };
 };
 
-module.exports = { generateData };
+const generateRoom = (room, users) => {
+  return {
+    room,
+    users,
+  };
+};
+
+module.exports = { generateData, generateRoom };
